@@ -10,13 +10,33 @@ import javax.swing.JFrame;
  */
 public class ServerGUI extends JFrame {
 
-	
+	private String serverName = "";
+	private String folderName = "";
 	
 	public ServerGUI(){
 		this.setTitle("PineApple Server");
 		
+		this.setSize(300,300);
+		
+		this.add(setUpGui());
+		
 		
 	}
+	
+	
+	public JPanel setUpGui(){
+		
+	}
+	
+	
+	public String getServerName(){
+		return serverName;
+	}
+	
+	public String getFolderName(){
+		return folderName;
+	}
+	
 	
 	
 	
