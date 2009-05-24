@@ -22,7 +22,7 @@ public class Transmitter
         }
     }
     
-    public void addFile(String fileName, int size)
+    public void addFile(String fileName, long size)
     {
         message.add(fileName, size);
     }
@@ -51,6 +51,11 @@ public class Transmitter
             System.out.println(e.getMessage());
         }
         
+    }
+    
+    public String getMessage()
+    {
+        return message.toString();
     }
 
 }

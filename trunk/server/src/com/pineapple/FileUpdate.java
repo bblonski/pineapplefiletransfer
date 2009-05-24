@@ -4,7 +4,7 @@ public class FileUpdate
 {
     private String fileName;
     
-    private int fileSize;
+    private long fileSize;
     
     private boolean exists;
     
@@ -13,10 +13,10 @@ public class FileUpdate
         this(fileName, 0, false);
     }
     
-    public FileUpdate(String fileName, int fileSize, boolean exists)
+    public FileUpdate(String fileName, long size, boolean exists)
     {
         this.fileName = fileName;
-        this.fileSize = fileSize;
+        this.fileSize = size;
         this.exists = exists;
     }
     
@@ -25,7 +25,7 @@ public class FileUpdate
         return this.fileName;
     }
     
-    public int getFileSize()
+    public long getFileSize()
     {
         return this.fileSize;
     }
@@ -35,6 +35,7 @@ public class FileUpdate
         return this.exists;
     }
     
+    @Override
     public boolean equals(Object o)
     {
         if(o instanceof FileUpdate)
@@ -48,6 +49,7 @@ public class FileUpdate
         return false;
     }
     
+    @Override
     public String toString()
     {
         StringBuilder sb = new StringBuilder();
