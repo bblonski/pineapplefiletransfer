@@ -8,6 +8,8 @@
  */
 package com.pineapple;
 
+import java.io.File;
+
 import net.contentobjects.jnotify.JNotify;
 import net.contentobjects.jnotify.JNotifyListener;
 
@@ -23,6 +25,9 @@ public class FileWatcher implements IWatcher
 	
 	/** The watch id. */
 	private int watchID;
+	
+	/** The message transmitter. */
+	private Transmitter transmitter;
 
 	/**
 	 * Instantiates a new file watcher on the given path.
@@ -37,6 +42,8 @@ public class FileWatcher implements IWatcher
 					JNotify.FILE_DELETED | 
 					JNotify.FILE_MODIFIED| 
 					JNotify.FILE_RENAMED;
+		
+		transmitter = new Transmitter();
 
 		watchID = JNotify.addWatch(path, mask, watchSubtree, new JNotifyListener()
 		{
@@ -48,25 +55,49 @@ public class FileWatcher implements IWatcher
 
 			public void fileModified(int wd, String rootPath, String name)
 			{
-				System.out.println("JNotifyTest.fileModified() : wd #" + wd + " root = " + rootPath
-						+ ", " + name);
+	            System.out.println("JNotifyTest.fileModified() : wd #" + wd + " root = " + rootPath
+	                        + ", " + name);
+	            File file = new File(rootPath + "\\" + name);
+	            if(file.exists() && file.isFile())
+	            {
+	                System.out.println("+ " + name + ", " + file.length());
+	                transmitter.addFile(name, file.length());
+	            }
 			}
 
 			public void fileDeleted(int wd, String rootPath, String name)
 			{
 				System.out.println("JNotifyTest.fileDeleted() : wd #" + wd + " root = " + rootPath
 						+ ", " + name);
+				File file = new File(rootPath + "\\" + name);
+				System.out.println("- " + name + ", " + file.length());
+				transmitter.removeFile(name);
 			}
 
 			public void fileCreated(int wd, String rootPath, String name)
 			{
 				System.out.println("JNotifyTest.fileCreated() : wd #" + wd + " root = " + rootPath
 						+ ", " + name);
+				File file = new File(rootPath + "\\" + name);
+				if(file.exists() && file.isFile())
+				{
+                    System.out.println("+ " + name + ", " + file.length());
+                    transmitter.addFile(name, file.length());
+				}
 			}
 		});
 	}
-
-
+	
+	/**
+	 * Returns the update message currently waiting in the transmitter.
+	 * 
+	 * @return The message to send. 
+	 */
+	public String getMessage()
+	{
+	    return transmitter.getMessage();
+	}
+	
 
 	/**
 	 * Removes the watch.
@@ -82,4 +113,6 @@ public class FileWatcher implements IWatcher
 			throw new Exception("Invalid watch ID specified");
 		}
 	}
+	
+	
 }
