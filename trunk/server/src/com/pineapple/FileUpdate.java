@@ -8,6 +8,11 @@ public class FileUpdate
     
     private boolean exists;
     
+    public FileUpdate(String fileName)
+    {
+        this(fileName, 0, false);
+    }
+    
     public FileUpdate(String fileName, int fileSize, boolean exists)
     {
         this.fileName = fileName;
