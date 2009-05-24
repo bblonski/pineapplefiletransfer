@@ -22,13 +22,13 @@ public class FileUpdateTest
     @Test
     public void testGetFileName()
     {
-        assertEquals(fd.getFileName(), "myFileName");
+        assertEquals("myFileName", fd.getFileName());
     }
 
     @Test
     public void testGetFileSize()
     {
-        assertEquals(fd.getFileSize(), 32);
+        assertEquals(32, fd.getFileSize());
     }
 
     @Test
@@ -36,7 +36,7 @@ public class FileUpdateTest
     {
         assertEquals(fd.exists(), true);
         fd = new FileUpdate(filename, 32, false);
-        assertEquals(fd.exists(), false);
+        assertEquals(false, fd.exists());
     }
 
     @Test
@@ -46,7 +46,7 @@ public class FileUpdateTest
         assertEquals(fd, fd2);
         fd2 = new FileUpdate(filename, size, false);
         assertEquals(fd, fd2);
-        fd2 = new FileUpdate(filename, 0, false);
+        fd2 = new FileUpdate(filename);
         assertEquals(fd, fd2);
         fd2 = new FileUpdate("noMyFilename",32, true);
         assertFalse(fd.equals(fd2));
@@ -55,9 +55,9 @@ public class FileUpdateTest
     @Test
     public void testToString()
     {
-        assertEquals(fd.toString(), "+ myFileName, 32");
+        assertEquals("+ myFileName, 32", fd.toString());
         fd = new FileUpdate(filename, size, false);
-        assertEquals(fd.toString(), "- myFileName, 32");
+        assertEquals("- myFileName, 32", fd.toString());
     }
 
 }

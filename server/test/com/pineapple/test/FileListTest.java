@@ -26,16 +26,16 @@ public class FileListTest
     public void testAdd()
     {
         fl.add(new FileUpdate("file5", 172, true));
-        assertEquals(fl.size(), 5);
+        assertEquals(5, fl.size());
     }
 
     @Test
     public void testRemove()
     {
-        assertTrue(fl.remove(new FileUpdate("file1", 0, false)));
-        assertEquals(fl.size(), 3);
+        assertTrue(fl.remove(new FileUpdate("file1")));
+        assertEquals(3, fl.size());
         assertFalse(fl.remove(new FileUpdate("file5", 0, true)));
-        assertEquals(fl.size(), 3);
+        assertEquals(3, fl.size());
     }
 
     @Test
@@ -46,7 +46,7 @@ public class FileListTest
         sb.append("+ file2, 51\n");
         sb.append("- file3, 0\n");
         sb.append("- file4, 231\n");
-        assertEquals(fl.toString(), sb.toString());
+        assertEquals(sb.toString(), fl.toString());
     }
 
 }
