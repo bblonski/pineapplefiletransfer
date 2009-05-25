@@ -1,10 +1,12 @@
 /*
- * Team: Pineapple
- * Members: Brian Blonski,
- * 			Jon McElroy,
- * 			Matthew Schlatman
- * 			Greg Gire
- * Date: 5/12/09
+ * PineappleFileTransfer
+ * CSC 550 Spring 2009
+ * Brian Blonski
+ * Matt Schlachtman
+ * Jon McElroy
+ * Greg Gire
+ * 
+ * This project is licensed under the GNU General Public License v3 
  */
 package com.pineapple;
 
@@ -13,35 +15,32 @@ import java.io.File;
 import net.contentobjects.jnotify.JNotify;
 import net.contentobjects.jnotify.JNotifyListener;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class FileWatcher registers event handlers for native I/O calls on a given directory.
+ * The Class FileWatcher registers event handlers for native I/O calls on a
+ * given directory.
  */
-public class FileWatcher implements IWatcher
-{
-	
-	/** Add watch to subtrees. */
-	private boolean watchSubtree = true;
-	
-	/** The watch id. */
-	private int watchID;
-	
-	/** The message transmitter. */
-	private Transmitter transmitter;
-
-	/**
-	 * Instantiates a new file watcher on the given path.
-	 * 
-	 * @param path the directory to add the file watch
-	 * 
-	 * @throws Exception JNotify Exception
-	 */
+public class FileWatcher implements IWatcher {
+    
+    /** Add watch to subtrees. */
+    private boolean watchSubtree = true;
+    
+    /** The watch id. */
+    private int watchID;
+    
+    /** The message transmitter. */
+    private Transmitter transmitter;
+    
+    /**
+     * Instantiates a new file watcher on the given path.
+     * 
+     * @param path the directory to add the file watch
+     * 
+     * @throws Exception JNotify Exception
+     */
 	public FileWatcher(String path) throws Exception
 	{
-		int mask =  JNotify.FILE_CREATED | 
-					JNotify.FILE_DELETED | 
-					JNotify.FILE_MODIFIED| 
-					JNotify.FILE_RENAMED;
+        int mask = JNotify.FILE_CREATED | JNotify.FILE_DELETED
+                | JNotify.FILE_MODIFIED | JNotify.FILE_RENAMED;
 		
 		transmitter = new Transmitter();
 
@@ -88,31 +87,27 @@ public class FileWatcher implements IWatcher
 		});
 	}
 	
-	/**
-	 * Returns the update message currently waiting in the transmitter.
-	 * 
-	 * @return The message to send. 
-	 */
-	public String getMessage()
-	{
-	    return transmitter.getMessage();
-	}
-	
-
-	/**
-	 * Removes the watch.
-	 * 
-	 * @throws Exception JNotify Exception
-	 */
-	public void removeWatch() throws Exception
-	{
-		boolean res = JNotify.removeWatch(watchID);
-		if (!res)
-		{
-			// invalid watch ID specified.
-			throw new Exception("Invalid watch ID specified");
-		}
-	}
-	
-	
+    
+    /**
+     * Returns the update message currently waiting in the transmitter.
+     * 
+     * @return The message to send.
+     */
+    public String getMessage() {
+        return transmitter.getMessage();
+    }
+    
+    /**
+     * Removes the watch.
+     * 
+     * @throws Exception JNotify Exception
+     */
+    public void removeWatch() throws Exception {
+        boolean res = JNotify.removeWatch(watchID);
+        if (!res) {
+            // invalid watch ID specified.
+            throw new Exception("Invalid watch ID specified");
+        }
+    }
+    
 }
