@@ -9,10 +9,10 @@
  */
 package com.pineapple;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.io.IOException;
 
-import com.jcraft.jsch.*;
+import ch.ethz.ssh2.Connection;
+import ch.ethz.ssh2.Session;
 
 /**
  * The Class Transmitter.
@@ -22,22 +22,15 @@ public class Transmitter {
     /** The message. */
     private UpdateMessage message;
     
-    /** The server name. */
-    private String serverName;
-    
     /** The server address. */
-    private InetAddress serverAddress;
+    private String serverAddress;
     
     /**
      * Instantiates a new transmitter.
      */
-    public Transmitter() {
-        try {
-            serverAddress = InetAddress.getLocalHost();
-            message = new UpdateMessage(serverAddress.getHostAddress());
-        } catch (UnknownHostException e) {
-            System.out.println("Unknown Host: " + e.getMessage());
-        }
+    public Transmitter(String serverAddress) {
+    	this.serverAddress = serverAddress;
+        message = new UpdateMessage(serverAddress);
     }
     
     /**
@@ -60,30 +53,41 @@ public class Transmitter {
     }
     
     /**
-     * Send.
+     * Send message using SCP.
      * 
-     * @param user the user
-     * @param host the host
-     * @param port the port
+     * @param username the username
+     * @param password the password
      */
-    public void send(String user, String host, int port) {
-        try {
-            JSch scp = new JSch();
-            Session session = scp.getSession(user, host, port);
-            // May need to add userInfo here
-            // UserInfo userInfo = new
-            // session.setUserInfo(userInfo);
-            session.connect();
-            // Used this from an example. Probably not correct
-            // exec 'scp -t rfile' remotely
-            String command = "scp -p -t updateFile";
-            Channel channel = session.openChannel("exec");
-            ((ChannelExec) channel).setCommand(command);
-            
-        } catch (JSchException e) {
-            System.out.println(e.getMessage());
-        }
-        
+    public void send(String username, String password) {
+    	//TODO Connection should be kept open with client as long as possible
+    	try {
+    		// Connect to server
+    		Connection conn = new Connection(serverAddress);
+    		conn.connect();
+    		
+    		// Authenticate username and password
+    		boolean isAuthenticated = conn.authenticateWithPassword(username, password);
+    		
+    		if(!isAuthenticated) {
+    			throw new IOException("ERROR: Authentication Failed");
+    		}
+    		
+    		// Create a session
+    		Session sess = conn.openSession();
+    		
+    		// Send Message
+    		sess.execCommand("scp -p -t updateFile");
+    		// OR is it sess.execCommand("scp updateFile directory/TargetFile"); ???
+    		
+    		
+    		//DEBUG
+    		sess.close();
+    		conn.close();    		
+    	} catch (IOException e)
+    	{
+    		e.printStackTrace(System.err);
+    		System.exit(2);
+    	}
     }
     
     /**
