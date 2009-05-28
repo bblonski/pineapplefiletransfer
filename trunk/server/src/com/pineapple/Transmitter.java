@@ -22,14 +22,10 @@ public class Transmitter {
     /** The message. */
     private UpdateMessage message;
     
-    /** The server address. */
-    private String serverAddress;
-    
     /**
      * Instantiates a new transmitter.
      */
     public Transmitter(String serverAddress) {
-    	this.serverAddress = serverAddress;
         message = new UpdateMessage(serverAddress);
     }
     
@@ -58,11 +54,11 @@ public class Transmitter {
      * @param username the username
      * @param password the password
      */
-    public void send(String username, String password) {
-    	//TODO Connection should be kept open with client as long as possible
+    public void send(String username, String password, String clientAddress) {
+    	//TODO send requires that caller checks that clientAddress isn't NULL
     	try {
     		// Connect to server
-    		Connection conn = new Connection(serverAddress);
+    		Connection conn = new Connection(clientAddress);
     		conn.connect();
     		
     		// Authenticate username and password
