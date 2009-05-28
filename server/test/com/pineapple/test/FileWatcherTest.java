@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.net.InetAddress;
 
 import org.junit.After;
@@ -97,6 +98,24 @@ public class FileWatcherTest {
             fail(e.getMessage());
         }
     }
+    
+	@Test
+	public void testFileRename() {
+		try {
+			FileWriter fout = new FileWriter("testdir\\file1.txt");
+			BufferedWriter fwrite = new BufferedWriter(fout);
+			fwrite.append("1234567890");
+			fwrite.close();
+			new File("testdir\\file1.txt").renameTo(new File(
+					"testdir\\file2.txt"));
+			assertEquals(InetAddress.getLocalHost().getHostAddress()
+					+ "\n- file1.txt, 0\n+ file2.txt, 10\n", myFileWatcher
+					.getMessage());
+		} catch (IOException e) {
+			fail(e.getMessage());
+		}
+
+	}
     
     @Test
     public void testGetAllFiles()
