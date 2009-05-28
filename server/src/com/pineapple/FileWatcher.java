@@ -13,6 +13,7 @@ package com.pineapple;
 import java.io.File;
 
 import net.contentobjects.jnotify.JNotify;
+import net.contentobjects.jnotify.JNotifyException;
 import net.contentobjects.jnotify.JNotifyListener;
 
 /**
@@ -29,6 +30,9 @@ public class FileWatcher implements IWatcher {
     
     /** The message transmitter. */
     private Transmitter transmitter;
+
+    /** The path to watch. */
+	private String path;
     
     /**
      * Instantiates a new file watcher on the given path.
@@ -37,8 +41,10 @@ public class FileWatcher implements IWatcher {
      * 
      * @throws Exception JNotify Exception
      */
-	public FileWatcher(String path) throws Exception
+	public FileWatcher(String path) throws JNotifyException
 	{
+		this.path = path;
+		
         int mask = JNotify.FILE_CREATED | JNotify.FILE_DELETED
                 | JNotify.FILE_MODIFIED | JNotify.FILE_RENAMED;
 		
@@ -50,6 +56,18 @@ public class FileWatcher implements IWatcher {
 			{
 				System.out.println("JNotifyTest.fileRenamed() : wd #" + wd + " root = " + rootPath
 						+ ", " + oldName + " -> " + newName);
+	            File file = new File("\\" +rootPath + "\\" + oldName);
+	            if(file.exists() && file.isFile())
+	            {
+	                System.out.println("+ " + oldName + ", " + file.length());
+	                transmitter.removeFile(oldName);
+	            }
+	            file = new File(rootPath + "\\" + newName);
+	            if(file.exists() && file.isFile())
+	            {
+	                System.out.println("+ " + newName + ", " + file.length());
+	                transmitter.addFile(newName, file.length());
+	            }
 			}
 
 			public void fileModified(int wd, String rootPath, String name)
@@ -96,6 +114,42 @@ public class FileWatcher implements IWatcher {
     public String getMessage() {
         return transmitter.getMessage();
     }
+    
+	/**
+	 * Adds all files in the watch path to the updateMessage and returns is as a
+	 * String.
+	 * 
+	 * @return An updateMessage containing a list of all files in the watch
+	 *         directory.
+	 */
+	public String getAllFiles() {
+		searchDir(path);
+		return getMessage();
+	}
+
+	/**
+	 * searchDir is a recursive search method for adding all files in the watch
+	 * directory to the update message.
+	 * 
+	 * @param pathName
+	 *            The path to do the recursive search on.
+	 */
+	private void searchDir(String pathName) {
+		File file = new File(pathName);
+		for (String subdir : file.list()) {
+			file = new File(pathName + "\\" + subdir);
+			if (file.isFile()) {
+				if (pathName.equals(path)) {
+					transmitter.addFile(subdir, file.length());
+				} else {
+					transmitter.addFile(pathName.substring(path.length() + 1)
+							+ "\\" + subdir, file.length());
+				}
+			} else if (file.isDirectory()) {
+				searchDir(pathName + "\\" + subdir);
+			}
+		}
+	}
     
     /**
      * Removes the watch.

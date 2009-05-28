@@ -10,7 +10,6 @@
  */
 package com.pineapple;
 
-public interface IMessage
-{
+public interface IMessage {
 
 }

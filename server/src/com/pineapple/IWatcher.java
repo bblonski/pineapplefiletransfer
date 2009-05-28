@@ -12,4 +12,7 @@ package com.pineapple;
 
 public interface IWatcher {
 
+	public String getMessage();
+
+	public String getAllFiles();
 }
