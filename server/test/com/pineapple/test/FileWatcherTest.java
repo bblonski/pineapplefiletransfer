@@ -132,6 +132,7 @@ public class FileWatcherTest {
 	        new File("testdir2\\file2.txt").delete();
 	        new File("testdir2\\test\\file3.txt").delete();
 	        file.delete();
+	        new File("testdir2").delete();
     	}catch (Exception e) {
 			fail(e.getMessage());
 		}
