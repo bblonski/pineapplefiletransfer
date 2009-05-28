@@ -57,11 +57,8 @@ public class FileWatcher implements IWatcher {
 				System.out.println("JNotifyTest.fileRenamed() : wd #" + wd + " root = " + rootPath
 						+ ", " + oldName + " -> " + newName);
 	            File file = new File("\\" +rootPath + "\\" + oldName);
-	            if(file.exists() && file.isFile())
-	            {
-	                System.out.println("+ " + oldName + ", " + file.length());
-	                transmitter.removeFile(oldName);
-	            }
+                System.out.println("- " + oldName + ", " + file.length());
+                transmitter.removeFile(oldName);
 	            file = new File(rootPath + "\\" + newName);
 	            if(file.exists() && file.isFile())
 	            {
