@@ -1,10 +1,12 @@
 package com.pineapple.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -42,6 +44,9 @@ public class FileWatcherTest {
         }
     }
     
+    /**
+     * Time sensitive.  Sleeps should insure proper behavior.  Kinda a hack.
+     */
     @Test
     public void testFileWatcher() {
         File temp = new File("testdir\\test\\");
@@ -53,12 +58,12 @@ public class FileWatcherTest {
             fwrite.append("asdf1234");
             fwrite.close();
             host = InetAddress.getLocalHost().getHostAddress();
-            Thread.sleep(1);
+            Thread.sleep(10);
             assertEquals(host + "\n+ test\\test2.txt, 8\n", myFileWatcher
                     .getMessage());
             new File("testdir\\test\\test2.txt").delete();
             temp.delete();
-            Thread.sleep(1);
+            Thread.sleep(10);
             assertEquals(host + "\n- test\\test2.txt, 0\n", myFileWatcher
                     .getMessage());
         } catch (Exception e) {
@@ -68,7 +73,7 @@ public class FileWatcherTest {
     }
     
     /**
-     * There are apparently some race conditions here.
+     * More thread sleep hackiness.
      */
     @Test
     public void testGetMessage() {
@@ -82,7 +87,7 @@ public class FileWatcherTest {
             fwrite = new BufferedWriter(fout);
             fwrite.append("asdf");
             fwrite.close();
-            Thread.sleep(1);
+            Thread.sleep(10);
             assertEquals(InetAddress.getLocalHost().getHostAddress()
                     + "\n+ file1.txt, 14\n+ file2.txt, 4\n", myFileWatcher
                     .getMessage());
@@ -91,6 +96,45 @@ public class FileWatcherTest {
         } catch (Exception e) {
             fail(e.getMessage());
         }
+    }
+    
+    @Test
+    public void testGetAllFiles()
+    {
+    	try{
+    		//Setup Directory
+	    	File file = new File("testdir2\\test");
+	    	file.mkdirs();
+	    	FileWriter fout = new FileWriter("testdir2\\file1.txt");
+	        BufferedWriter fwrite = new BufferedWriter(fout);
+	        fwrite.append("1");
+	        fwrite.close();
+	        fout = new FileWriter("testdir2\\file2.txt");
+	        fwrite = new BufferedWriter(fout);
+	        fwrite.append("12");
+	        fwrite.close();
+	        fout = new FileWriter("testdir2\\test\\file3.txt");
+	        fwrite = new BufferedWriter(fout);
+	        fwrite.append("123");
+	        fwrite.close();
+	        FileWatcher fw = new FileWatcher("testdir2");
+	        StringBuilder sb = new StringBuilder();
+	        //build comparison string
+	        sb.append(InetAddress.getLocalHost().getHostAddress() +"\n");
+	        sb.append("+ file1.txt, 1\n");
+	        sb.append("+ file2.txt, 2\n");
+	        sb.append("+ test\\file3.txt, 3\n");
+	        //AssertEquals
+	        assertEquals(sb.toString(), fw.getAllFiles());
+	        //Cleanup
+	        fw.removeWatch();
+	        new File("testdir2\\file1.txt").delete();
+	        new File("testdir2\\file2.txt").delete();
+	        new File("testdir2\\test\\file3.txt").delete();
+	        file.delete();
+    	}catch (Exception e) {
+			fail(e.getMessage());
+		}
     }
     
 }
