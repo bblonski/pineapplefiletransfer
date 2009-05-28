@@ -111,6 +111,7 @@ public class FileWatcherTest {
 			assertEquals(InetAddress.getLocalHost().getHostAddress()
 					+ "\n- file1.txt, 0\n+ file2.txt, 10\n", myFileWatcher
 					.getMessage());
+			new File("testdir\\file2.txt").delete();
 		} catch (IOException e) {
 			fail(e.getMessage());
 		}
