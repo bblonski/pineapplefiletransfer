@@ -9,7 +9,12 @@
  */
 package com.pineapple;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.Session;
@@ -25,8 +30,8 @@ public class Transmitter {
     /**
      * Instantiates a new transmitter.
      */
-    public Transmitter(String serverAddress) {
-        message = new UpdateMessage(serverAddress);
+    public Transmitter() {
+        message = new UpdateMessage(getIP());
     }
     
     /**
@@ -54,7 +59,7 @@ public class Transmitter {
      * @param username the username
      * @param password the password
      */
-    public void send(String username, String password, String clientAddress) {
+    public boolean send(String username, String password, String clientAddress) {
     	//TODO send requires that caller checks that clientAddress isn't NULL
     	try {
     		// Connect to server
@@ -72,18 +77,19 @@ public class Transmitter {
     		Session sess = conn.openSession();
     		
     		// Send Message
-    		sess.execCommand("scp -p -t updateFile");
+    		sess.execCommand("scp -p -t updateFile");  //do we need to write an actual file or can we send a string? -Brian
     		// OR is it sess.execCommand("scp updateFile directory/TargetFile"); ???
     		
     		
     		//DEBUG
     		sess.close();
-    		conn.close();    		
+    		conn.close();  		
     	} catch (IOException e)
     	{
     		e.printStackTrace(System.err);
-    		System.exit(2);
+    		return false;
     	}
+    	return true;
     }
     
     /**
@@ -94,5 +100,44 @@ public class Transmitter {
     public String getMessage() {
         return message.toString();
     }
+
+	/**
+	 * Returns the public IP address of the server. This method opens a
+	 * connection to an www.ip-adress.com and reads the current IP address off
+	 * the website. This is a total hack, but hey it works.
+	 * 
+	 * @return
+	 */
+	private String getIP() {
+		//taken from example at http://forums.sun.com/thread.jspa?threadID=762802&tstart=0
+		String publicIP = "";
+		//String search = "<h2>My IP address: ";
+		String search = "<span class=\"ip_value\">";
+		try {
+
+			URL tempURL = new URL("http://testip.edpsciences.org/");
+			HttpURLConnection tempConn = (HttpURLConnection) tempURL
+					.openConnection();
+			InputStream tempInStream = tempConn.getInputStream();
+			InputStreamReader tempIsr = new InputStreamReader(tempInStream);
+			BufferedReader tempBr = new BufferedReader(tempIsr);
+			//Find the line with the IP address on it.
+			while(!publicIP.contains(search))
+			{
+				publicIP = tempBr.readLine();
+			}
+            // hack to find IP address in the HTML
+			publicIP = publicIP.substring(publicIP.indexOf(search)+search.length(), publicIP.indexOf("</span>"));
+
+			tempBr.close();
+			tempInStream.close();
+
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
+			publicIP = "<Could-Not-Resolve-Public-IP-Address>";
+
+		}
+		return publicIP;
+	}
     
 }

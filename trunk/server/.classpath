@@ -9,6 +9,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/jsch-0.1.41.jar"/>
+	<classpathentry kind="lib" path="lib/ganymed-ssh2-build210.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

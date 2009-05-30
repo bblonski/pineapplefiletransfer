@@ -48,7 +48,7 @@ public class FileWatcher implements IWatcher {
         int mask = JNotify.FILE_CREATED | JNotify.FILE_DELETED
                 | JNotify.FILE_MODIFIED | JNotify.FILE_RENAMED;
 		
-		transmitter = new Transmitter("127.0.0.1"); //TODO Need to get current server's address
+		transmitter = new Transmitter();
 
 		watchID = JNotify.addWatch(path, mask, watchSubtree, new JNotifyListener()
 		{
