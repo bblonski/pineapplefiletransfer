@@ -75,7 +75,7 @@ public class Transmitter {
     		}
     		
     		SCPClient scp = conn.createSCPClient();
-    		scp.put("/home/bblonski/workspace/pineapplefiletransfer/text.txt", ".");
+    		scp.put("updatefile", ".");
     		conn.close();  		
     	} catch (IOException e)
     	{
