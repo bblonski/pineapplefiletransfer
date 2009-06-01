@@ -1,5 +1,8 @@
 package com.pineapple_gui;
 
+import java.awt.FileDialog;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,11 +26,15 @@ public class ServerGUI extends JFrame {
 	private static String rootFolder = "";
 
 	private static JTextField serverNameInput;
+	private static JTextField rootInput;
+
+	private static FileDialog fd;
 
 	public ServerGUI() {
 		this.setTitle("PineApple Server");
-
-		this.setSize(400, 400);
+		fd = new FileDialog(this);
+		fd.setTitle("Choose Root Directory");
+		this.setSize(400, 200);
 		this.setLocation(200, 200);
 		this.add(setUpGui());
 
@@ -35,12 +42,20 @@ public class ServerGUI extends JFrame {
 
 	public JPanel setUpGui() {
 		JPanel main = new JPanel();
-		main.setLayout(new GridLayout(2, 1));
-		main.add(serverNameGui());
+		main.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
 
-		main.add(rootFolderGui());
+		main.add(serverNameGui(), gbc);
 
-		main.add(buttons());
+		gbc.gridy++;
+
+		main.add(rootFolderGui(), gbc);
+
+		gbc.gridy++;
+
+		main.add(buttons(), gbc);
 
 		return main;
 	}
@@ -49,6 +64,7 @@ public class ServerGUI extends JFrame {
 		Box box = Box.createHorizontalBox();
 
 		serverNameInput = new JTextField();
+		serverNameInput.setColumns(15);
 		box.add(serverNameInput);
 
 		JButton setButton = new JButton("Set Server Name");
@@ -60,6 +76,15 @@ public class ServerGUI extends JFrame {
 
 	public Box rootFolderGui() {
 		Box box = Box.createHorizontalBox();
+
+		rootInput = new JTextField();
+		rootInput.setColumns(15);
+		box.add(rootInput);
+
+		JButton setButton = new JButton("Choose");
+
+		setButton.addActionListener(new ButtonListener());
+		box.add(setButton);
 
 		return box;
 	}
@@ -81,6 +106,10 @@ public class ServerGUI extends JFrame {
 
 	public static String getServerName() {
 		return serverName;
+	}
+
+	public static FileDialog getFD() {
+		return fd;
 	}
 
 	public static String getRootFolder() {
@@ -110,9 +139,13 @@ public class ServerGUI extends JFrame {
 			serverName = serverNameInput.getText();
 		}
 	}
-	
+
 	public static void exit() {
 		System.exit(0);
+	}
+
+	public static JTextField getRootInput() {
+		return rootInput;
 	}
 
 }
@@ -123,10 +156,30 @@ class ButtonListener implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("Run Server")) {
-			System.out.println("Run that server!");
+			if(ServerGUI.getServerName().equals("")) {
+				System.out.println("Server Name is not yet set.");
+			}
+			else if(ServerGUI.getRootFolder().equals("")){
+				System.out.println("Root directory is not yet selected.");
+			}
+			else{
+				System.out.println("Run that server named: "
+						+ ServerGUI.getServerName() + " with directory: "
+						+ ServerGUI.getRootFolder());
+				
+			}
+			
+			
 		} else if (e.getActionCommand().equals("Set Server Name")) {
 			ServerGUI.changeServerName();
-			System.out.println("Server name changed to: " + ServerGUI.getServerName());
+			System.out.println("Server name changed to: "
+					+ ServerGUI.getServerName());
+		} else if (e.getActionCommand().equals("Choose")) {
+			System.out.println("Run Root Directory");
+			FileDialog fd = ServerGUI.getFD();
+			fd.setVisible(true);
+			ServerGUI.getRootInput().setText(fd.getFile());
+			ServerGUI.setRootFolder(fd.getDirectory());
 		} else if (e.getActionCommand().equals("Cancel")) {
 			System.out.println("Exiting the system");
 			ServerGUI.exit();
