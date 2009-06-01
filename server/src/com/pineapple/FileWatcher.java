@@ -56,10 +56,10 @@ public class FileWatcher implements IWatcher {
 			{
 				System.out.println("JNotifyTest.fileRenamed() : wd #" + wd + " root = " + rootPath
 						+ ", " + oldName + " -> " + newName);
-	            File file = new File("\\" +rootPath + "\\" + oldName);
+	            File file = new File(File.separator + rootPath + File.separator + oldName);
                 System.out.println("- " + oldName + ", " + file.length());
                 transmitter.removeFile(oldName);
-	            file = new File(rootPath + "\\" + newName);
+	            file = new File(rootPath + File.separator + newName);
 	            if(file.exists() && file.isFile())
 	            {
 	                System.out.println("+ " + newName + ", " + file.length());
@@ -71,7 +71,7 @@ public class FileWatcher implements IWatcher {
 			{
 	            System.out.println("JNotifyTest.fileModified() : wd #" + wd + " root = " + rootPath
 	                        + ", " + name);
-	            File file = new File(rootPath + "\\" + name);
+	            File file = new File(rootPath + File.separator + name);
 	            if(file.exists() && file.isFile())
 	            {
 	                System.out.println("+ " + name + ", " + file.length());
@@ -83,7 +83,7 @@ public class FileWatcher implements IWatcher {
 			{
 				System.out.println("JNotifyTest.fileDeleted() : wd #" + wd + " root = " + rootPath
 						+ ", " + name);
-				File file = new File(rootPath + "\\" + name);
+				File file = new File(rootPath + File.separator + name);
 				System.out.println("- " + name + ", " + file.length());
 				transmitter.removeFile(name);
 			}
@@ -92,7 +92,7 @@ public class FileWatcher implements IWatcher {
 			{
 				System.out.println("JNotifyTest.fileCreated() : wd #" + wd + " root = " + rootPath
 						+ ", " + name);
-				File file = new File(rootPath + "\\" + name);
+				File file = new File(rootPath + File.separator + name);
 				if(file.exists() && file.isFile())
 				{
                     System.out.println("+ " + name + ", " + file.length());
@@ -134,16 +134,16 @@ public class FileWatcher implements IWatcher {
 	private void searchDir(String pathName) {
 		File file = new File(pathName);
 		for (String subdir : file.list()) {
-			file = new File(pathName + "\\" + subdir);
+			file = new File(pathName + File.separator + subdir);
 			if (file.isFile()) {
 				if (pathName.equals(path)) {
 					transmitter.addFile(subdir, file.length());
 				} else {
 					transmitter.addFile(pathName.substring(path.length() + 1)
-							+ "\\" + subdir, file.length());
+							+ File.separator + subdir, file.length());
 				}
 			} else if (file.isDirectory()) {
-				searchDir(pathName + "\\" + subdir);
+				searchDir(pathName + File.separator + subdir);
 			}
 		}
 	}

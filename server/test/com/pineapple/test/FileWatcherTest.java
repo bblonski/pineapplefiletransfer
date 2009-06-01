@@ -55,20 +55,20 @@ public class FileWatcherTest {
      */
     @Test
     public void testFileWatcher() {
-        File temp = new File("testdir\\test\\");
+        File temp = new File("testdir" + File.separator + "test" + File.separator + "");
         try {
             temp.mkdirs();
-            FileWriter fout = new FileWriter("testdir\\test\\test2.txt");
+            FileWriter fout = new FileWriter("testdir" + File.separator + "test" + File.separator + "test2.txt");
             BufferedWriter fwrite = new BufferedWriter(fout);
             fwrite.append("asdf1234");
             fwrite.close();
             Thread.sleep(10);
-            assertEquals(getIP() + "\n+ test\\test2.txt, 8\n", myFileWatcher
+            assertEquals(getIP() + "\n+ test" + File.separator + "test2.txt, 8\n", myFileWatcher
                     .getMessage());
-            new File("testdir\\test\\test2.txt").delete();
+            new File("testdir" + File.separator + "test" + File.separator + "test2.txt").delete();
             temp.delete();
             Thread.sleep(10);
-            assertEquals(getIP() + "\n- test\\test2.txt, 0\n", myFileWatcher
+            assertEquals(getIP() + "\n- test" + File.separator + "test2.txt, 0\n", myFileWatcher
                     .getMessage());
         } catch (Exception e) {
             fail(e.getMessage());
@@ -82,20 +82,20 @@ public class FileWatcherTest {
     @Test
     public void testGetMessage() {
         try {
-			FileWriter fout = new FileWriter("testdir\\file1.txt");
+			FileWriter fout = new FileWriter("testdir" + File.separator + "file1.txt");
 			BufferedWriter fwrite = new BufferedWriter(fout);
 			fwrite.append("123415asdfasdf");
 			fwrite.close();
 
-			fout = new FileWriter("testdir\\file2.txt");
+			fout = new FileWriter("testdir" + File.separator + "file2.txt");
 			fwrite = new BufferedWriter(fout);
 			fwrite.append("asdf");
 			fwrite.close();
 			Thread.sleep(10);
 			assertEquals(getIP() + "\n+ file1.txt, 14\n+ file2.txt, 4\n",
 					myFileWatcher.getMessage());
-			new File("testdir\\file1.txt").delete();
-			new File("testdir\\file2.txt").delete();
+			new File("testdir" + File.separator + "file1.txt").delete();
+			new File("testdir" + File.separator + "file2.txt").delete();
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
@@ -104,15 +104,15 @@ public class FileWatcherTest {
 	@Test
 	public void testFileRename() {
 		try {
-			FileWriter fout = new FileWriter("testdir\\file1.txt");
+			FileWriter fout = new FileWriter("testdir" + File.separator + "file1.txt");
 			BufferedWriter fwrite = new BufferedWriter(fout);
 			fwrite.append("1234567890");
 			fwrite.close();
-			new File("testdir\\file1.txt").renameTo(new File(
-					"testdir\\file2.txt"));
+			new File("testdir" + File.separator + "file1.txt").renameTo(new File(
+					"testdir" + File.separator + "file2.txt"));
 			assertEquals(getIP() + "\n- file1.txt, 0\n+ file2.txt, 10\n",
 					myFileWatcher.getMessage());
-			new File("testdir\\file2.txt").delete();
+			new File("testdir" + File.separator + "file2.txt").delete();
 		} catch (IOException e) {
 			fail(e.getMessage());
 		}
@@ -124,17 +124,17 @@ public class FileWatcherTest {
     {
     	try{
     		//Setup Directory
-	    	File file = new File("testdir2\\test");
+	    	File file = new File("testdir2" + File.separator + "test");
 	    	file.mkdirs();
-	    	FileWriter fout = new FileWriter("testdir2\\file1.txt");
+	    	FileWriter fout = new FileWriter("testdir2" + File.separator + "file1.txt");
 	        BufferedWriter fwrite = new BufferedWriter(fout);
 	        fwrite.append("1");
 	        fwrite.close();
-	        fout = new FileWriter("testdir2\\file2.txt");
+	        fout = new FileWriter("testdir2" + File.separator + "file2.txt");
 	        fwrite = new BufferedWriter(fout);
 	        fwrite.append("12");
 	        fwrite.close();
-	        fout = new FileWriter("testdir2\\test\\file3.txt");
+	        fout = new FileWriter("testdir2" + File.separator + "test" + File.separator + "file3.txt");
 	        fwrite = new BufferedWriter(fout);
 	        fwrite.append("123");
 	        fwrite.close();
@@ -144,14 +144,14 @@ public class FileWatcherTest {
 	        sb.append(getIP() +"\n");
 	        sb.append("+ file1.txt, 1\n");
 	        sb.append("+ file2.txt, 2\n");
-	        sb.append("+ test\\file3.txt, 3\n");
+	        sb.append("+ test" + File.separator + "file3.txt, 3\n");
 	        //AssertEquals
 	        assertEquals(sb.toString(), fw.getAllFiles());
 	        //Cleanup
 	        fw.removeWatch();
-	        new File("testdir2\\file1.txt").delete();
-	        new File("testdir2\\file2.txt").delete();
-	        new File("testdir2\\test\\file3.txt").delete();
+	        new File("testdir2" + File.separator + "file1.txt").delete();
+	        new File("testdir2" + File.separator + "file2.txt").delete();
+	        new File("testdir2" + File.separator + "test" + File.separator + "file3.txt").delete();
 	        file.delete();
 	        new File("testdir2").delete();
     	}catch (Exception e) {
