@@ -17,7 +17,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import ch.ethz.ssh2.Connection;
-import ch.ethz.ssh2.Session;
+import ch.ethz.ssh2.SCPClient;
+import ch.ethz.ssh2.StreamGobbler;
 
 /**
  * The Class Transmitter.
@@ -73,16 +74,8 @@ public class Transmitter {
     			throw new IOException("ERROR: Authentication Failed");
     		}
     		
-    		// Create a session
-    		Session sess = conn.openSession();
-    		
-    		// Send Message
-    		sess.execCommand("scp -p -t updateFile");  //do we need to write an actual file or can we send a string? -Brian
-    		// OR is it sess.execCommand("scp updateFile directory/TargetFile"); ???
-    		
-    		
-    		//DEBUG
-    		sess.close();
+    		SCPClient scp = conn.createSCPClient();
+    		scp.put("/home/bblonski/workspace/pineapplefiletransfer/text.txt", ".");
     		conn.close();  		
     	} catch (IOException e)
     	{
