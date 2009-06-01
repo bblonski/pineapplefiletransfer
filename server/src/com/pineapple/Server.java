@@ -20,6 +20,8 @@ public class Server {
 		try {
 			System.out.println("Path is " + path);
 			fileWatcher = new FileWatcher(path);
+			
+			
 		} catch (JNotifyException e) {
 			e.printStackTrace();
 		} 
