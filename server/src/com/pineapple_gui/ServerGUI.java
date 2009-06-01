@@ -3,16 +3,16 @@ package com.pineapple_gui;
 import java.awt.FileDialog;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.print.attribute.standard.Severity;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import com.pineapple.Server;
 
 /**
  * This class contains the server side gui code. It is written in Java Swing.
@@ -166,10 +166,8 @@ class ButtonListener implements ActionListener {
 				System.out.println("Run that server named: "
 						+ ServerGUI.getServerName() + " with directory: "
 						+ ServerGUI.getRootFolder());
-				
+				Server server = new Server(ServerGUI.getRootFolder());
 			}
-			
-			
 		} else if (e.getActionCommand().equals("Set Server Name")) {
 			ServerGUI.changeServerName();
 			System.out.println("Server name changed to: "
