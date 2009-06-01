@@ -78,7 +78,7 @@ public class ServerGUI extends JFrame {
 		Box box = Box.createHorizontalBox();
 
 		rootInput = new JTextField();
-		rootInput.setColumns(15);
+		rootInput.setColumns(25);
 		box.add(rootInput);
 
 		JButton setButton = new JButton("Choose");
@@ -176,7 +176,7 @@ class ButtonListener implements ActionListener {
 			System.out.println("Run Root Directory");
 			FileDialog fd = ServerGUI.getFD();
 			fd.setVisible(true);
-			ServerGUI.getRootInput().setText(fd.getFile());
+			ServerGUI.getRootInput().setText(fd.getDirectory());
 			ServerGUI.setRootFolder(fd.getDirectory());
 		} else if (e.getActionCommand().equals("Cancel")) {
 			System.out.println("Exiting the system");
