@@ -1,5 +1,6 @@
 package com.pineapple_gui;
 
+import java.awt.Dialog;
 import java.awt.FileDialog;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -8,9 +9,11 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.plaf.metal.MetalIconFactory.FolderIcon16;
 
 import com.pineapple.Server;
 
@@ -28,12 +31,16 @@ public class ServerGUI extends JFrame {
 	private static JTextField serverNameInput;
 	private static JTextField rootInput;
 
-	private static FileDialog fd;
+	// private static FileDialog fd;
+	private static JFileChooser fd;
 
 	public ServerGUI() {
 		this.setTitle("PineApple Server");
-		fd = new FileDialog(this);
-		fd.setTitle("Choose Root Directory");
+		// fd = new FileDialog(this);
+		fd = new JFileChooser();
+		fd.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+		// fd.setTitle("Choose Root Directory");
 		this.setSize(400, 200);
 		this.setLocation(200, 200);
 		this.add(setUpGui());
@@ -108,7 +115,7 @@ public class ServerGUI extends JFrame {
 		return serverName;
 	}
 
-	public static FileDialog getFD() {
+	public static JFileChooser getFD() {
 		return fd;
 	}
 
@@ -156,13 +163,11 @@ class ButtonListener implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("Run Server")) {
-			if(ServerGUI.getServerName().equals("")) {
+			if (ServerGUI.getServerName().equals("")) {
 				System.out.println("Server Name is not yet set.");
-			}
-			else if(ServerGUI.getRootFolder().equals("")){
+			} else if (ServerGUI.getRootFolder().equals("")) {
 				System.out.println("Root directory is not yet selected.");
-			}
-			else{
+			} else {
 				System.out.println("Run that server named: "
 						+ ServerGUI.getServerName() + " with directory: "
 						+ ServerGUI.getRootFolder());
@@ -174,10 +179,14 @@ class ButtonListener implements ActionListener {
 					+ ServerGUI.getServerName());
 		} else if (e.getActionCommand().equals("Choose")) {
 			System.out.println("Run Root Directory");
-			FileDialog fd = ServerGUI.getFD();
-			fd.setVisible(true);
-			ServerGUI.getRootInput().setText(fd.getDirectory());
-			ServerGUI.setRootFolder(fd.getDirectory());
+			JFileChooser jf = ServerGUI.getFD();
+			// FileDialog fd = ServerGUI.getFD();
+			int returnVal = jf.showOpenDialog(new JFrame());
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				ServerGUI.getRootInput().setText(
+						jf.getSelectedFile().toString());
+				ServerGUI.setRootFolder(jf.getSelectedFile().toString());
+			}
 		} else if (e.getActionCommand().equals("Cancel")) {
 			System.out.println("Exiting the system");
 			ServerGUI.exit();
