@@ -15,6 +15,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.lang.Thread;
+import java.io.File;
 
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.SCPClient;
@@ -60,29 +62,89 @@ public class Transmitter {
      * @param username the username
      * @param password the password
      */
-    public boolean send(String username, String password, String clientAddress) {
-    	//TODO send requires that caller checks that clientAddress isn't NULL
-    	try {
-    		// Connect to server
-    		Connection conn = new Connection(clientAddress);
-    		conn.connect();
-    		
-    		// Authenticate username and password
-    		boolean isAuthenticated = conn.authenticateWithPassword(username, password);
-    		
-    		if(!isAuthenticated) {
-    			throw new IOException("ERROR: Authentication Failed");
-    		}
-    		
-    		SCPClient scp = conn.createSCPClient();
-    		scp.put("updatefile", ".");
-    		conn.close();  		
-    	} catch (IOException e)
-    	{
-    		e.printStackTrace(System.err);
-    		return false;
-    	}
-    	return true;
+    public void send(String username, String password, String clientAddressFile) {
+		while (1)
+		{
+			try
+			{
+				// Get client's address
+				Receiver receiver = new Receiver(clientAddressFile);
+				String clientAddress = receiver.getClientAddress();
+
+				// Connect to server
+				Connection conn = new Connection(clientAddress);
+				conn.connect();
+
+				// Authenticate username and password
+				boolean isAuthenticated = conn.authenticateWithPassword(username, password);
+
+				if (!isAuthenticated)
+				{
+					Thread.sleep(30000); // Waits 30 seconds then tries to establish connection to the client again
+					continue;
+				}
+
+				SCPClient scp = conn.createSCPClient();
+				try
+				{
+					File file = new File("metadata.wtf");
+
+					// Create file if it does not exist
+					boolean fileExists = file.createNewFile();
+					if (fileExists)
+					{
+						//File does not exist
+						try
+						{
+							//Write to file
+							BufferedWriter out = new BufferedWriter(new FileWriter("metadata.wtf"));
+							out.write(message.getHeader());
+							out.write(message.toString());
+							out.close();
+						}
+						catch (IOException e)
+						{
+							Thread.sleep(30000); // Waits 30 seconds then tries to establish connection to the client again
+							continue;
+						}
+
+					}
+					else
+					{
+						// File already exists
+						try
+						{
+							// Append to file;
+							BufferedWriter out = new BufferedWriter(new FileWriter("metadata.wtf", true));
+							out.write(message.toString());
+							out.close();
+						}
+						catch (IOException e)
+						{
+							Thread.sleep(30000); // Waits 30 seconds then tries to establish connection to the client again
+							continue;
+						}
+
+					}
+
+					scp.put("metadata.wtf", ".");
+					conn.close();
+					file.delete();
+					message.clear(); // Message was transmitted successfully, clear all updates
+					break;
+				}
+				catch (Exception e)
+				{
+					Thread.sleep(30000); // Waits 30 seconds then tries to establish connection to the client again
+					continue;
+				}
+			}
+			catch (Exception e)
+			{
+				Thread.sleep(30000); // Waits 30 seconds then tries to establish connection to the client again
+				continue;
+			}
+		}
     }
     
     /**
@@ -90,8 +152,8 @@ public class Transmitter {
      * 
      * @return the message
      */
-    public String getMessage() {
-        return message.toString();
+    public UpdateMessage getMessage() {
+		return message;
     }
 
 	/**

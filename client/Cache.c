@@ -39,7 +39,9 @@ long getSize(){
 }
 
 void addEntry(char* name, long size){
-	entry* e = (entry *)malloc(sizeof(entry));
+   checkCache(name);
+
+   entry* e = (entry *)malloc(sizeof(entry));
 	strcpy(e->fname,name);
 	e->size = size;
 	e->numUsed = 1;
@@ -83,6 +85,19 @@ bool deleteEntry(char* name, long size){
 		temp = temp->next;
 	}
 	return false; //BABY!
+}
+
+bool checkCache(char* name) {
+   node* itr = HEAD;
+   while(itr.next != NULL) {
+      if(strcmp(itr->e.fname, name) == 0) {
+         deleteEntry(itr->e.fname, itr->e.size);
+         return true;
+      }
+      itr = itr.next;
+   }
+
+   return false;
 }
 
 void createSpace(){

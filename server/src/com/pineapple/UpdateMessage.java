@@ -37,7 +37,7 @@ public class UpdateMessage implements IMessage {
      * @param size the size of the file
      */
     public void add(String fileName, long size) {
-        list.remove(new FileUpdate(fileName));
+        this.list.remove(new FileUpdate(fileName));
         this.list.add(new FileUpdate(fileName, size, true));
     }
     
@@ -47,15 +47,36 @@ public class UpdateMessage implements IMessage {
      * @param fileName the file name
      */
     public void remove(String fileName) {
-        list.remove(new FileUpdate(fileName));
+        this.list.remove(new FileUpdate(fileName));
         this.list.add(new FileUpdate(fileName, 0, false));
     }
     
+	/**
+	 *  Clears the update message.
+	 */
+	public void clear() {
+		this.list.delete();
+	}
+
+	/**
+	 * Returns header.
+	 */
+	public String getHeader() {
+		return this.header;
+	}
+
+	/**
+	 * Returns true if file list is empty.
+	 */
+	public boolean isEmpty() {
+		return this.list.size() == 0;
+	}
+
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return header + "\n" + list.toString();
+        return list.toString();
     }
 }
