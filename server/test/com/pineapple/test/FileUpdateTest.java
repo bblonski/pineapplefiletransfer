@@ -48,9 +48,9 @@ public class FileUpdateTest {
     
     @Test
     public void testToString() {
-        assertEquals("+ myFileName, 32", fd.toString());
+        assertEquals("+ myFileName 32", fd.toString());
         fd = new FileUpdate(filename, size, false);
-        assertEquals("- myFileName, 32", fd.toString());
+        assertEquals("- myFileName 32", fd.toString());
     }
     
 }
