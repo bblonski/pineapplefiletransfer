@@ -41,14 +41,12 @@ public class FileWatcher implements IWatcher {
      * 
      * @throws Exception JNotify Exception
      */
-	public FileWatcher(String path) throws JNotifyException
+	public FileWatcher(String path, Transmitter transmitter) throws JNotifyException
 	{
 		this.path = path;
 		
         int mask = JNotify.FILE_CREATED | JNotify.FILE_DELETED
                 | JNotify.FILE_MODIFIED | JNotify.FILE_RENAMED;
-		
-		transmitter = new Transmitter();
 
 		watchID = JNotify.addWatch(path, mask, watchSubtree, new JNotifyListener()
 		{
