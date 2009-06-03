@@ -17,7 +17,7 @@ public class FileListTest {
         fl.add(new FileUpdate("file1", 32, true));
         fl.add(new FileUpdate("file2", 51, true));
         fl.add(new FileUpdate("file3", 0, false));
-        fl.add(new FileUpdate("file4", 231, false));
+        fl.add(new FileUpdate("file 4", 231, false));
     }
     
     @Test
@@ -37,10 +37,10 @@ public class FileListTest {
     @Test
     public void testToString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("+ file1, 32\n");
-        sb.append("+ file2, 51\n");
-        sb.append("- file3, 0\n");
-        sb.append("- file4, 231\n");
+        sb.append("+ file1 32\n");
+        sb.append("+ file2 51\n");
+        sb.append("- file3 0\n");
+        sb.append("- file 4 231\n");
         assertEquals(sb.toString(), fl.toString());
     }
     

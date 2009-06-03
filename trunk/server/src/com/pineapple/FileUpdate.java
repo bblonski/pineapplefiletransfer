@@ -104,7 +104,7 @@ public class FileUpdate {
             sb.append("- ");
         }
         sb.append(fileName);
-        sb.append(", ");
+        sb.append(" ");
         sb.append(fileSize);
         return sb.toString();
     }
