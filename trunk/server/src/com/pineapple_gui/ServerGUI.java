@@ -6,11 +6,17 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.plaf.metal.MetalIconFactory.FolderIcon16;
@@ -23,7 +29,7 @@ import com.pineapple.Server;
  * @author jmcelroy
  * 
  */
-public class ServerGUI extends JFrame {
+public class ServerGUI extends JFrame{
 
 	private static String serverName = "";
 	private static String rootFolder = "";
@@ -154,6 +160,38 @@ public class ServerGUI extends JFrame {
 	public static JTextField getRootInput() {
 		return rootInput;
 	}
+	
+	public static String getIP(){
+		//taken from example at http://forums.sun.com/thread.jspa?threadID=762802&tstart=0
+		String publicIP = "";
+		//String search = "<h2>My IP address: ";
+		String search = "<span class=\"ip_value\">";
+		try {
+
+			URL tempURL = new URL("http://testip.edpsciences.org/");
+			HttpURLConnection tempConn = (HttpURLConnection) tempURL
+					.openConnection();
+			InputStream tempInStream = tempConn.getInputStream();
+			InputStreamReader tempIsr = new InputStreamReader(tempInStream);
+			BufferedReader tempBr = new BufferedReader(tempIsr);
+			//Find the line with the IP address on it.
+			while(!publicIP.contains(search))
+			{
+				publicIP = tempBr.readLine();
+			}
+            // hack to find IP address in the HTML
+			publicIP = publicIP.substring(publicIP.indexOf(search)+search.length(), publicIP.indexOf("</span>"));
+
+			tempBr.close();
+			tempInStream.close();
+
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
+			publicIP = "<Could-Not-Resolve-Public-IP-Address>";
+
+		}
+		return publicIP;
+	}
 
 }
 
@@ -172,6 +210,10 @@ class ButtonListener implements ActionListener {
 						+ ServerGUI.getServerName() + " with directory: "
 						+ ServerGUI.getRootFolder());
 				Server server = new Server(ServerGUI.getRootFolder());
+				ServerGUI.exit();
+				JOptionPane.showMessageDialog(new JFrame(), "IP address: " + ServerGUI.getIP());
+				
+				
 			}
 		} else if (e.getActionCommand().equals("Set Server Name")) {
 			ServerGUI.changeServerName();
