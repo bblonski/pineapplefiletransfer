@@ -40,13 +40,16 @@ int main(int argc, char** argv)
 	
 	sprintf(commandBuf, "mkdir %s", serverName);
 	system(commandBuf);
-	sprintf(commandBuf, "cp -f fsint ./%s/", serverName);
-	system(commandBuf);
-	//Insert other modules
 	
-	sprintf(commandBuf, "scp client_info.txt %s", serverAddr);
-	system(commandBuf);
-	printf("Awating Metadata from %s\n", serverName);
+	sprintf(commandBuf, "scp client_info.txt %s:~/", serverAddr);
+	int constat;
+	constat = system(commandBuf);
+	if(constat != 0)
+	{
+		printf("Unable to Connect to Server\nCheck client_info.txt file, or server config file.\n");
+		return(-1);
+	}	
+	printf("Connection Established.\nAwating Metadata from %s\n", serverName);
 	
 	sprintf(commandBuf, "cd %s", serverName);
 	system(commandBuf);
@@ -62,10 +65,10 @@ int main(int argc, char** argv)
 			sleep(6);
 	}
 	if(status == 0)
-		printf("File Structure has been built sucessfully.\n");
+		printf("\nFile Structure has been built sucessfully.\n\n");
 	else
 	{
-		printf("Connection Timeout!\n Exiting, Try Again Later.\n");
+		printf("\nConnection Timeout!\n Exiting, Try Again Later.\n\n");
 		return(0);
 	}	
 	
