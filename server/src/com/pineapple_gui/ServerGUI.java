@@ -218,9 +218,10 @@ class ButtonListener implements ActionListener {
 				//Put you name and password for vogon
 				
 				JOptionPane.showMessageDialog(new JFrame(), "IP address: " + ServerGUI.getIP());
+				//String pass = JOptionPane.showInputDialog("Input your password FOOL!");
 				String root = ServerGUI.getRootFolder();
 				ServerGUI.noShow();
-				Server server = new Server(root,"google","","client_info.txt");
+				Server server = new Server(root,"google","testpass","/home/jmcelroy/client_info.txt");
 				
 				
 				

@@ -44,6 +44,7 @@ public class FileWatcher implements IWatcher {
 	public FileWatcher(String path, final Transmitter transmitter) throws JNotifyException
 	{
 		this.path = path;
+		this.transmitter = transmitter;
 		
         int mask = JNotify.FILE_CREATED | JNotify.FILE_DELETED
                 | JNotify.FILE_MODIFIED | JNotify.FILE_RENAMED;
@@ -137,8 +138,8 @@ public class FileWatcher implements IWatcher {
 				if (pathName.equals(path)) {
 					transmitter.addFile(subdir, file.length());
 				} else {
-					transmitter.addFile(pathName.substring(path.length() + 1)
-							+ File.separator + subdir, file.length());
+					String test = pathName.substring(path.length() + 1) + File.separator + subdir;
+					transmitter.addFile(test, file.length());
 				}
 			} else if (file.isDirectory()) {
 				searchDir(pathName + File.separator + subdir);

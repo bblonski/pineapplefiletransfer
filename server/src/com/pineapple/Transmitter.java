@@ -83,7 +83,7 @@ public class Transmitter {
 							//Write to file
 							BufferedWriter out = new BufferedWriter(new FileWriter("metadata.wtf"));
 							out.write(message.getHeader() + "\n");
-							out.write(message.toString());
+							out.write(message.toString() + "\n");
 							message.clear(); // Message was transmitted successfully, clear all updates
 							out.close();
 						}
@@ -101,7 +101,7 @@ public class Transmitter {
 						{
 							// Append to file;
 							BufferedWriter out = new BufferedWriter(new FileWriter("metadata.wtf", true));
-							out.write(message.toString());
+							out.write(message.toString() + "\n");
 							message.clear(); // Message was transmitted successfully, clear all updates
 							out.close();
 						}
@@ -124,21 +124,26 @@ public class Transmitter {
 				String clientAddress = receiver.getClientAddress();
 
 				// Connect to server
+				System.out.println("Try to establish connection to: " + clientAddress);
 				Connection conn = new Connection(clientAddress);
+				
 				conn.connect();
-
+				System.out.println("Trying to authenticate.");
 				// Authenticate username and password
 				boolean isAuthenticated = conn.authenticateWithPassword(username, password);
 
 				if (!isAuthenticated)
 				{
+					System.out.println("Auth failed!");
 					Thread.sleep(30000); // Waits 30 seconds then tries to establish connection to the client again
 					continue;
 				}
-
+				
+			
 				SCPClient scp = conn.createSCPClient();
 				
-				scp.put("metadata.wtf", ".");
+				scp.put("metadata.wtf", "~/Documents/CSC550/CodeBase/client/");
+				System.out.println("File Sent :)");
 				conn.close();
 				file.delete();
 				break;
