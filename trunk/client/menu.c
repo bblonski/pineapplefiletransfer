@@ -22,7 +22,7 @@ int main(int argc, char** argv)
 	FILE* configfile;
 	char newline;
 	char* commandBuf;
-	commandBuf = (char*)malloc(200);
+	commandBuf = (char*)malloc(400);
 
 	system("clear");
 	printf("Welcome to Pineapple Ubiquitous Data Access\n");
@@ -51,14 +51,16 @@ int main(int argc, char** argv)
 	}	
 	printf("Connection Established.\nAwating Metadata from %s\n", serverName);
 	
-	sprintf(commandBuf, "cd %s", serverName);
-	system(commandBuf);
+	//sprintf(commandBuf, "cd %s", serverName);
+	//system(commandBuf);
+	
+	sprintf(commandBuf, "./fsint %s", serverName);
 	
 	int status;
 	int i;
 	for(i = 0; i < 10; i++)
 	{
-		status = system("./fsint");
+		status = system(commandBuf);
 		if(status == 0)
 			break;
 		else
