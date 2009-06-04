@@ -18,7 +18,7 @@ public class Receiver {
 	}
 	
 	public String getClientAddress() {
-		while(1) 
+		while(true) 
 		{
 			// Open the file that contains the client IP address string and return it
 			try
@@ -33,13 +33,18 @@ public class Receiver {
 			catch (Exception e)
 			{
 				System.out.println("Attempting to open " + this.clientAddressFile + " and get clientAddress again...");
-				Thread.sleep(30000); //Wait 30 seconds then attempt to open client IP file again
+				try {
+					Thread.sleep(30000);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} //Wait 30 seconds then attempt to open client IP file again
 				continue;
 			}
 		}
 	}
 	
-	public void setClientAddress(String clientAddress) {
-		this.clientAddress = clientAddress;
+	public void setClientAddress(String clientAddressFile) {
+		this.clientAddressFile = clientAddressFile;
 	}
 }
