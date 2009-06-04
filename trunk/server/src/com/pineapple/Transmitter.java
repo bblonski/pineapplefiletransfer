@@ -67,9 +67,58 @@ public class Transmitter {
     public void send(String username, String password, String clientAddressFile) {
 		while (true)
 		{
+			System.out.println("In Send Loop");
 			try
 			{
-				System.out.println("In Send Loop");
+				File file = new File("metadata.wtf");
+				try
+				{
+					// Create file if it does not exist
+					boolean fileExists = file.createNewFile();
+					if (fileExists)
+					{
+						//File does not exist
+						try
+						{
+							//Write to file
+							BufferedWriter out = new BufferedWriter(new FileWriter("metadata.wtf"));
+							out.write(message.getHeader() + "\n");
+							out.write(message.toString());
+							message.clear(); // Message was transmitted successfully, clear all updates
+							out.close();
+						}
+						catch (IOException e)
+						{
+							Thread.sleep(30000); // Waits 30 seconds then tries to establish connection to the client again
+							continue;
+						}
+
+					}
+					else
+					{
+						// File already exists
+						try
+						{
+							// Append to file;
+							BufferedWriter out = new BufferedWriter(new FileWriter("metadata.wtf", true));
+							out.write(message.toString());
+							message.clear(); // Message was transmitted successfully, clear all updates
+							out.close();
+						}
+						catch (IOException e)
+						{
+							Thread.sleep(30000); // Waits 30 seconds then tries to establish connection to the client again
+							continue;
+						}
+
+					}
+				}
+				catch (Exception e)
+				{
+					Thread.sleep(30000); // Waits 30 seconds then tries to establish connection to the client again
+					continue;
+				}
+				
 				// Get client's address
 				Receiver receiver = new Receiver(clientAddressFile);
 				String clientAddress = receiver.getClientAddress();
@@ -88,59 +137,11 @@ public class Transmitter {
 				}
 
 				SCPClient scp = conn.createSCPClient();
-				try
-				{
-					File file = new File("metadata.wtf");
-
-					// Create file if it does not exist
-					boolean fileExists = file.createNewFile();
-					if (fileExists)
-					{
-						//File does not exist
-						try
-						{
-							//Write to file
-							BufferedWriter out = new BufferedWriter(new FileWriter("metadata.wtf"));
-							out.write(message.getHeader());
-							out.write(message.toString());
-							out.close();
-						}
-						catch (IOException e)
-						{
-							Thread.sleep(30000); // Waits 30 seconds then tries to establish connection to the client again
-							continue;
-						}
-
-					}
-					else
-					{
-						// File already exists
-						try
-						{
-							// Append to file;
-							BufferedWriter out = new BufferedWriter(new FileWriter("metadata.wtf", true));
-							out.write(message.toString());
-							out.close();
-						}
-						catch (IOException e)
-						{
-							Thread.sleep(30000); // Waits 30 seconds then tries to establish connection to the client again
-							continue;
-						}
-
-					}
-
-					scp.put("metadata.wtf", ".");
-					conn.close();
-					file.delete();
-					message.clear(); // Message was transmitted successfully, clear all updates
-					break;
-				}
-				catch (Exception e)
-				{
-					Thread.sleep(30000); // Waits 30 seconds then tries to establish connection to the client again
-					continue;
-				}
+				
+				scp.put("metadata.wtf", ".");
+				conn.close();
+				file.delete();
+				break;
 			}
 			catch (Exception e)
 			{

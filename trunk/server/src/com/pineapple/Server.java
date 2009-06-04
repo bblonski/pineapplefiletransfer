@@ -43,7 +43,7 @@ public class Server {
 			System.out.println("In Continuous Update");
 			if (!transmitter.getMessage().isEmpty())
 			{
-				transmitter.send("username", "password", "clientAddressFile");
+				transmitter.send("username", "password", "client_info.txt");
 			}
 
 			try {
