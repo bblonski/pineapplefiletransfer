@@ -24,6 +24,11 @@ int main(int argc, char** argv)
 	delete = (char*)malloc(204);
 	char* directories;
 	directories = (char*)malloc(204);
+	char* serverip;
+	serverip = (char*)malloc(20);
+	char* realaddr;
+	realaddr = (char*)malloc(220);
+
 	
 	metadata = fopen("metadata.wtf", "r");
 	if(metadata == NULL)
@@ -32,6 +37,7 @@ int main(int argc, char** argv)
 		return(-1);
 	}
 	
+	fscanf(metadata, "%s%c",serverip, &newline); 
 	while(1)
 	{	
 		fscanf(metadata,"%c%s%d%c", &itype, filename, &fsize, &newline);
@@ -40,10 +46,12 @@ int main(int argc, char** argv)
 		//printf("The filename is = %s\n", filename);
 		//printf("the fsize is = %d\n", fsize);
 		
+		sprintf(realaddr, "%s/%s", argv[1], filename);
+		
 		if(itype == '+')
 		{
 			
-			fileds = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0600);
+			fileds = open(realaddr, O_CREAT | O_WRONLY | O_TRUNC, 0600);
 			if(fileds == -1)
 			{
 				//printf("The filename in the mkdir condition = %s\n", filename);
@@ -59,17 +67,17 @@ int main(int argc, char** argv)
 				}
 				fflush(stdout);
 				filename[lastslash] = '\0';
-				sprintf(directories, "mkdir -p %s", filename);
+				sprintf(directories, "mkdir -p %s", realaddr);
 				//printf("%s\n", directories);
 				system(directories);
 				filename[lastslash] = '/';
-				fileds = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0600);
+				fileds = open(realaddr, O_CREAT | O_WRONLY | O_TRUNC, 0600);
 			}	
 			close(fileds);
 		}	
 		else if(itype == '-')
 		{
-			sprintf(delete, "rm %s%c", filename, '\0');
+			sprintf(delete, "rm -r %s%c", filename, '\0');
 			system(delete);
 		}	
 		else
