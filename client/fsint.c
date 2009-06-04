@@ -28,7 +28,7 @@ int main(int argc, char** argv)
 	metadata = fopen("metadata.wtf", "r");
 	if(metadata == NULL)
 	{
-		printf("No Metadata file found\n");
+		printf(".");
 		return(-1);
 	}
 	
