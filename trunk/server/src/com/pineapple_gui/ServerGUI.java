@@ -209,7 +209,8 @@ class ButtonListener implements ActionListener {
 				System.out.println("Run that server named: "
 						+ ServerGUI.getServerName() + " with directory: "
 						+ ServerGUI.getRootFolder());
-				Server server = new Server(ServerGUI.getRootFolder());
+				//Put you name and password for vogon
+				Server server = new Server(ServerGUI.getRootFolder(),"p","honey","clientIPaddress.wtf");
 				ServerGUI.exit();
 				JOptionPane.showMessageDialog(new JFrame(), "IP address: " + ServerGUI.getIP());
 				

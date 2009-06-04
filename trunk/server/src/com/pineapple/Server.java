@@ -38,14 +38,20 @@ public class Server {
 
 	public void continuousUpdate()
 	{
-		while (1)
+		while (true)
 		{
-			if (!transmitter.isEmpty())
+			System.out.println("In Continuous Update");
+			if (!transmitter.getMessage().isEmpty())
 			{
 				transmitter.send("username", "password", "clientAddressFile");
 			}
 
-			Thread.sleep(30000); //Wait 30 seconds
+			try {
+				Thread.sleep(30000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} //Wait 30 seconds
 		}
 	}
 }

@@ -10,6 +10,8 @@
 package com.pineapple;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -63,10 +65,11 @@ public class Transmitter {
      * @param password the password
      */
     public void send(String username, String password, String clientAddressFile) {
-		while (1)
+		while (true)
 		{
 			try
 			{
+				System.out.println("In Send Loop");
 				// Get client's address
 				Receiver receiver = new Receiver(clientAddressFile);
 				String clientAddress = receiver.getClientAddress();
@@ -141,7 +144,11 @@ public class Transmitter {
 			}
 			catch (Exception e)
 			{
-				Thread.sleep(30000); // Waits 30 seconds then tries to establish connection to the client again
+				try {
+					Thread.sleep(30000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				} // Waits 30 seconds then tries to establish connection to the client again
 				continue;
 			}
 		}

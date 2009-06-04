@@ -57,6 +57,11 @@ public class FileList {
         return list.size();
     }
     
+    
+    public void delete(){
+    	list = new ArrayList<FileUpdate>();
+    }
+    
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()

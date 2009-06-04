@@ -41,7 +41,7 @@ public class FileWatcher implements IWatcher {
      * 
      * @throws Exception JNotify Exception
      */
-	public FileWatcher(String path, Transmitter transmitter) throws JNotifyException
+	public FileWatcher(String path, final Transmitter transmitter) throws JNotifyException
 	{
 		this.path = path;
 		
@@ -107,7 +107,7 @@ public class FileWatcher implements IWatcher {
      * @return The message to send.
      */
     public String getMessage() {
-        return transmitter.getMessage();
+        return transmitter.getMessage().toString();
     }
     
 	/**
