@@ -39,6 +39,8 @@ public class ServerGUI extends JFrame{
 
 	// private static FileDialog fd;
 	private static JFileChooser fd;
+	
+	private static ServerGUI self;
 
 	public ServerGUI() {
 		this.setTitle("PineApple Server");
@@ -50,7 +52,7 @@ public class ServerGUI extends JFrame{
 		this.setSize(400, 200);
 		this.setLocation(200, 200);
 		this.add(setUpGui());
-
+		self = this;
 	}
 
 	public JPanel setUpGui() {
@@ -152,6 +154,10 @@ public class ServerGUI extends JFrame{
 			serverName = serverNameInput.getText();
 		}
 	}
+	
+	public static void noShow(){
+		self.setVisible(false);
+	}
 
 	public static void exit() {
 		System.exit(0);
@@ -210,9 +216,12 @@ class ButtonListener implements ActionListener {
 						+ ServerGUI.getServerName() + " with directory: "
 						+ ServerGUI.getRootFolder());
 				//Put you name and password for vogon
-				Server server = new Server(ServerGUI.getRootFolder(),"p","honey","clientIPaddress.wtf");
-				ServerGUI.exit();
+				
 				JOptionPane.showMessageDialog(new JFrame(), "IP address: " + ServerGUI.getIP());
+				String root = ServerGUI.getRootFolder();
+				ServerGUI.noShow();
+				Server server = new Server(root,"google","","client_info.txt");
+				
 				
 				
 			}

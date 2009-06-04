@@ -23,12 +23,16 @@ public class Receiver {
 			// Open the file that contains the client IP address string and return it
 			try
 			{
+				System.out.println("Opening client address file: " + this.clientAddressFile);
 				FileInputStream fis = new FileInputStream(this.clientAddressFile);
 				DataInputStream dis = new DataInputStream(fis);
 				BufferedReader br = new BufferedReader(new InputStreamReader(dis));
 				String str = br.readLine();
 				if (str != null)
+				{
+					System.out.println("Client IP Address: " + str);
 					return str;
+				}
 			}
 			catch (Exception e)
 			{
