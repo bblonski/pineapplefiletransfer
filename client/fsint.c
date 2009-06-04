@@ -1,11 +1,6 @@
 /*
  *  fsint.c
  *  
- *
- *  This program makes or removes files from the fs
- *  Currently there are issues with making the directory, and the input
- *  comes from stdin but can be redirected ie. ./fsint < buildTest
- *  This test makes 4 test files and dletes the second one.
  *  Copyright 2009 Cal Poly San Luis Obispo. All rights reserved.
  *
  */
