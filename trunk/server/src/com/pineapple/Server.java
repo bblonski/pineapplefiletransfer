@@ -28,6 +28,7 @@ public class Server {
 		try {
 			transmitter = new Transmitter();
 			fileWatcher = new FileWatcher(path, transmitter);
+			fileWatcher.getAllFiles();
 			
 		} catch (JNotifyException e) {
 			e.printStackTrace();
@@ -43,7 +44,7 @@ public class Server {
 			System.out.println("In Continuous Update");
 			if (!transmitter.getMessage().isEmpty())
 			{
-				transmitter.send("username", "password", "client_info.txt");
+				transmitter.send(this.username, this.password, this.clientAddressFile);
 			}
 
 			try {
