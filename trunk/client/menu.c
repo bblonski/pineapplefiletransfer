@@ -23,15 +23,16 @@ int main(int argc, char** argv)
 	char newline;
 	char* commandBuf;
 	commandBuf = (char*)malloc(200);
-	
+
+	system("clear");
 	printf("Welcome to Pineapple Ubiquitous Data Access\n");
 	printf("Please enter the server config file: ");
 	scanf("%s%c", config, &newline);
 	
-	configfile = fopen(config);
+	configfile = fopen(config, "r");
 	if(configfile == NULL)
 	{
-		printf("Error Unable to Open Server Config file."\n);
+		printf("Error Unable to Open Server Config file.\n");
 		return(-1);
 	}
 	
@@ -44,9 +45,30 @@ int main(int argc, char** argv)
 	//Insert other modules
 	
 	sprintf(commandBuf, "scp client_info.txt %s", serverAddr);
+	system(commandBuf);
+	printf("Awating Metadata from %s\n", serverName);
 	
-	printf("Attempting to connect with %s\n", serverName);
-	//incomplete
+	sprintf(commandBuf, "cd %s", serverName);
+	system(commandBuf);
+	
+	int status;
+	int i;
+	for(i = 0; i < 10; i++)
+	{
+		status = system("./fsint");
+		if(status == 0)
+			break;
+		else
+			sleep(6);
+	}
+	if(status == 0)
+		printf("File Structure has been built sucessfully.\n");
+	else
+	{
+		printf("Connection Timeout!\n Exiting, Try Again Later.\n");
+		return(0);
+	}	
+	
 	
 
 	return 0;
