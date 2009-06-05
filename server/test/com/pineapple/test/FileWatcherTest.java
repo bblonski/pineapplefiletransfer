@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.pineapple.FileWatcher;
+import com.pineapple.Transmitter;
 
 public class FileWatcherTest {
     
@@ -30,7 +31,7 @@ public class FileWatcherTest {
                 deleteFile(testdir);
             }
             testdir.mkdir();
-            myFileWatcher = new FileWatcher("testdir");
+            myFileWatcher = new FileWatcher("testdir", new Transmitter());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -160,7 +161,7 @@ public class FileWatcherTest {
 	        fwrite = new BufferedWriter(fout);
 	        fwrite.append("123");
 	        fwrite.close();
-	        myFileWatcher = new FileWatcher("testdir");
+	        myFileWatcher = new FileWatcher("testdir", new Transmitter());
 	        StringBuilder sb = new StringBuilder();
 	        //build comparison string
 	        sb.append(getIP() +"\n");

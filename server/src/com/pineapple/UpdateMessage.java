@@ -71,12 +71,16 @@ public class UpdateMessage implements IMessage {
 	public boolean isEmpty() {
 		return this.list.size() == 0;
 	}
+	
+	public String getBody() {
+		return list.toString();
+	}
 
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return list.toString();
+        return getHeader() + "\n" + getBody() + "\n";
     }
 }

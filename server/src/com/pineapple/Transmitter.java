@@ -67,7 +67,7 @@ public class Transmitter {
     public void send(String username, String password, String clientAddressFile) {
 		while (true)
 		{
-			System.out.println("In Send Loop");
+			System.out.println("In Send Loop.");
 			try
 			{
 				File file = new File("metadata.wtf");
@@ -82,8 +82,7 @@ public class Transmitter {
 						{
 							//Write to file
 							BufferedWriter out = new BufferedWriter(new FileWriter("metadata.wtf"));
-							out.write(message.getHeader() + "\n");
-							out.write(message.toString() + "\n");
+							out.write(message.toString());
 							message.clear(); // Message was transmitted successfully, clear all updates
 							out.close();
 						}
@@ -101,7 +100,7 @@ public class Transmitter {
 						{
 							// Append to file;
 							BufferedWriter out = new BufferedWriter(new FileWriter("metadata.wtf", true));
-							out.write(message.toString() + "\n");
+							out.write(message.getBody());
 							message.clear(); // Message was transmitted successfully, clear all updates
 							out.close();
 						}
@@ -142,8 +141,8 @@ public class Transmitter {
 			
 				SCPClient scp = conn.createSCPClient();
 				
-				scp.put("metadata.wtf", "~/Documents/CSC550/CodeBase/client/");
-				System.out.println("File Sent :)");
+				scp.put("metadata.wtf", "~/Documents/CSC550/CodeBase/uniClient/");
+				System.out.println("Metadata File Sent.");
 				conn.close();
 				file.delete();
 				break;
