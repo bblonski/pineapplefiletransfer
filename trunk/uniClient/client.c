@@ -282,7 +282,7 @@ int main(int argc, char** argv)
 	}	
 	
 	
-	printf("Using another terminal or file browser you are welcome to explore the %s folder.\n", serverName);
+	printf("Using another terminal or file browser you\n are welcome to explore the %s folder.\n", serverName);
 	menuSel();	
 	
 	return 0;
@@ -316,6 +316,11 @@ void menuSel()
 	else if(strcmp("open", choice) == 0)
 	{
 		request();
+		menuSel();
+	}
+	else
+	{
+		printf("Invalid Request!\n");
 		menuSel();
 	}	
 	
