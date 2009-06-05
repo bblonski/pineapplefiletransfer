@@ -314,9 +314,11 @@ int main(int argc, char** argv)
 void menuSel()
 {
 	char* choice;
+   char* filename;
 	int rval;
 	choice = (char*)malloc(100);
-	printf("Enter a Command(update, view, open, quit):");
+   filename = (char*)malloc(256);
+	printf("Enter a Command(update, view, open, quit): ");
 	scanf("%s%c", choice, &newline);
 	if(strcmp("quit", choice) == 0)
 	{
@@ -338,7 +340,9 @@ void menuSel()
 	}
 	else if(strcmp("open", choice) == 0)
 	{
-		request();
+      printf("Enter the full path of the file you wish to open: ");
+      scanf("%s%c", filename, &newline);
+		request(filename);
 		menuSel();
 	}
 	else
