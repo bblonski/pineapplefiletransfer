@@ -93,12 +93,35 @@ int checkCache(char* name)
 	while(itr->next != NULL) {
 		if(strcmp(itr->fname, name) == 0) {
 			//deleteEntry(itr->fname, itr->size);
-			return 1;
+         if(itr->numUsed != 0) {
+			   return 1;
+         }
+         else {
+            return 0;
+         }
 		}
 		itr = itr->next;
 	}
 	
 	return 0;
+}
+
+int updateEntry(char* name)
+{
+   if (HEAD == NULL)
+      return 0;
+
+   node* itr = HEAD;
+   while (itr->next != NULL) {
+      if (strcp(itr->fname, name) == 0) {
+         itr->numUsed = itr->numUsed + 1;
+         itr->lastAccessed = time(NULL);
+         return 1;
+      }
+      itr = itr->next;
+   }
+
+   return 0;
 }
 
 void createSpace()
@@ -326,8 +349,37 @@ void menuSel()
 	
 }
 
-void request()
+void request(char* filename)
 {
-	printf("nothing happened.\n");
+   char* commandBuf;
+	commandBuf = (char*)malloc(400);
+
+   if (checkCache(filename) == 1) {
+      // File is in cache and stored in memory
+      if(updateEntry(filename) == 1) {
+         // View the file
+         sprintf(commandBuf, "less %s", filename);
+	      system(commandBuf);
+      }
+      else {
+         printf("ERROR: %s should exist in cache!", name);
+      }
+   }
+   else {
+      // File should be in cache with numUsed == 0
+      if(updateEntry(filename) == 1) { // Updated numUsed and lastAccessed
+         // Download file
+         sprintf(commandBuf, "scp %s:~/ %s", serverAddr, filename);
+	      int constat;
+	      constat = system(commandBuf);
+	      if(constat != 0)
+	      {
+		      printf("Unable to Connect to Server\nCheck client_info.txt file, or server config file.\n");
+         }
+      }
+      else {
+         printf("ERROR: %s does not exist in file structure!", name);
+      }
+   }
 }
 
