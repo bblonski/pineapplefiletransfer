@@ -140,7 +140,7 @@ void createSpace()
 	node* temp = HEAD;
 	node* candidate = HEAD;
 	
-	while(temp->next != NULL){
+	while(temp != NULL){
 		temp = temp->next;
 		if(candidate->numUsed > temp->numUsed){
 			candidate = temp;
@@ -151,7 +151,9 @@ void createSpace()
 		}
 	}
 	
-	deleteEntry(candidate->fname);
+   if (candidate != NULL) {
+	   deleteEntry(candidate->fname);
+   }
 }	
 
 void printCache()
