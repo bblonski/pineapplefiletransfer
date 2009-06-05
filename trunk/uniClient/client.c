@@ -63,22 +63,31 @@ void deleteEntry(char* name){
 	
 	node* temp = HEAD;
 	
-	if(strcmp(temp->fname, name) == 0){
-		HEAD = temp->next;
-		free(temp);
-		//return true;		
-	}
-	node* prev = temp;
-	temp = temp->next;
-	
-	while(temp->next != NULL){
+	if(HEAD != NULL)
+	{
+		//printf("Head is not null\n");
 		if(strcmp(temp->fname, name) == 0){
-			prev->next = temp->next;
-			free(temp);
-			//return true;
+			HEAD = temp->next;
+			//free(temp);
+			//return true;		
 		}
-		prev = temp;
-		temp = temp->next;
+		else
+		{
+			node* prev = temp;
+			temp = temp->next;
+			
+			while(temp != NULL)
+			{
+				if(strcmp(temp->fname, name) == 0)
+				{
+					prev->next = temp->next;
+					//free(temp);
+					//return true;
+				}
+				prev = temp;
+				temp = temp->next;
+			}	
+		}
 	}
 	//return false; //BABY!
 	//return(HEAD);
@@ -112,8 +121,10 @@ int updateEntry(char* name)
       return 0;
 
    node* itr = HEAD;
-   while (itr->next != NULL) {
-      if (strcp(itr->fname, name) == 0) {
+   while (itr != NULL)
+   {
+      if (strcmp(itr->fname, name) == 0) 
+	  {
          itr->numUsed = itr->numUsed + 1;
          itr->lastAccessed = time(NULL);
          return 1;
@@ -224,6 +235,7 @@ int fsint(char* argv)
 		{
 			sprintf(delete, "rm -r %s%c", realaddr, '\0');
 			deleteEntry(filename);
+			printf("crashed after here");
 			system(delete);
 		}	
 		else
@@ -360,27 +372,32 @@ void request(char* filename)
       // File is in cache and stored in memory
       if(updateEntry(filename) == 1) {
          // View the file
-         sprintf(commandBuf, "less %s", filename);
+         sprintf(commandBuf, "less %s/%s", serverName, filename);
 	      system(commandBuf);
       }
       else {
-         printf("ERROR: %s should exist in cache!", name);
+         printf("ERROR: %s should exist in cache!\n", filename);
       }
    }
    else {
       // File should be in cache with numUsed == 0
       if(updateEntry(filename) == 1) { // Updated numUsed and lastAccessed
          // Download file
-         sprintf(commandBuf, "scp %s:~/ %s", serverAddr, filename);
+         sprintf(commandBuf, "scp %s:~/test/%s %s/%s", serverAddr, filename, serverName, filename);
 	      int constat;
 	      constat = system(commandBuf);
 	      if(constat != 0)
 	      {
 		      printf("Unable to Connect to Server\nCheck client_info.txt file, or server config file.\n");
-         }
+          }
+		  else
+		  {
+			  sprintf(commandBuf, "less %s/%s", serverName, filename);
+			  system(commandBuf);
+		  }
       }
       else {
-         printf("ERROR: %s does not exist in file structure!", name);
+         printf("ERROR: %s does not exist in file structure!\n", filename);
       }
    }
 }
