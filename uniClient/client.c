@@ -10,6 +10,9 @@
 #include "client.h"
 
 node* HEAD = NULL;
+char* serverName;
+char* serverAddr;
+char newline;
 
 long getSize(){
 	if(HEAD == NULL)
@@ -133,7 +136,6 @@ int fsint(char* argv)
 {
 	FILE* metadata;
 	int fileds;
-	char newline;
 	char itype;
 	char* filename;
 	filename = (char*)malloc(200);
@@ -151,7 +153,7 @@ int fsint(char* argv)
 	metadata = fopen("metadata.wtf", "r");
 	if(metadata == NULL)
 	{
-		printf(".");
+		//printf(".");
 		return(-1);
 	}
 	
@@ -217,9 +219,7 @@ int main(int argc, char** argv)
 {
 	char* config;
 	config = (char*)malloc(200);
-	char* serverName;
 	serverName = (char*)malloc(200);
-	char* serverAddr;
 	serverAddr = (char*)malloc(200);
 	FILE* configfile;
 	char newline;
@@ -272,8 +272,8 @@ int main(int argc, char** argv)
 	}
 	if(status == 0)
 	{
-		//system("clear");
-		printf("\nFile Structure for %s has been built sucessfully.\n\n", serverName);
+		system("clear");
+		printf("\nFile Structure for %s has been built/updated sucessfully.\n\n", serverName);
 	}
 	else
 	{
@@ -282,13 +282,47 @@ int main(int argc, char** argv)
 	}	
 	
 	
-	printf("\n\nUsing another terminal or explorer you are welcome to explore the %s folder.\n", serverName);
-	//printf("What
-	
-	
-	
-	
+	printf("Using another terminal or file browser you are welcome to explore the %s folder.\n", serverName);
+	menuSel();	
 	
 	return 0;
+}
+
+void menuSel()
+{
+	char* choice;
+	int rval;
+	choice = (char*)malloc(100);
+	printf("Enter a Command(update, view, open, quit):");
+	scanf("%s%c", choice, &newline);
+	if(strcmp("quit", choice) == 0)
+	{
+		system("clear");
+		printf("Thank You for using Pineapple Ubiquitous Data Access!\n");
+		exit(0);
+	}
+	else if(strcmp("update", choice) == 0)
+	{
+		rval = fsint(serverName);
+		if(rval != 0)
+			printf("No New Metadata.\n");
+		menuSel();
+	}
+	else if(strcmp("view", choice) == 0)
+	{
+		printCache();
+		menuSel();
+	}
+	else if(strcmp("open", choice) == 0)
+	{
+		request();
+		menuSel();
+	}	
+	
+}
+
+void request()
+{
+	printf("nothing happened.\n");
 }
 
