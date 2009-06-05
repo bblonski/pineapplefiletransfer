@@ -217,15 +217,13 @@ int fsint(char* argv)
 				fileds = open(realaddr, O_CREAT | O_WRONLY | O_TRUNC, 0600);
 			}	
 			close(fileds);
-			if(checkCache(filename) == 1)
-				deleteEntry(filename);
+			deleteEntry(filename);
 			addEntry(filename, fsize, 0);
 		}	
 		else if(itype == '-')
 		{
 			sprintf(delete, "rm -r %s%c", realaddr, '\0');
-			if(checkCache(filename) == 1)
-				deleteEntry(filename);
+			deleteEntry(filename);
 			system(delete);
 		}	
 		else
