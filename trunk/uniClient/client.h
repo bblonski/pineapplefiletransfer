@@ -45,3 +45,7 @@ int fsint(char* argv);
 
 int main(int argc, char** argv);
 
+void menuSel();
+
+void request();
+
