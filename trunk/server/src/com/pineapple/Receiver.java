@@ -36,7 +36,7 @@ public class Receiver {
 			}
 			catch (Exception e)
 			{
-				System.out.println("Attempting to open " + this.clientAddressFile + " and get clientAddress again...");
+				System.out.println("Unable to open " + this.clientAddressFile + ". Waiting to recieve clientAddress...");
 				try {
 					Thread.sleep(30000);
 				} catch (InterruptedException e1) {
