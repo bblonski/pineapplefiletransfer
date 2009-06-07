@@ -1,0 +1,6 @@
++ testFiles/file1.txt 1
++ testFiles/test2 2
++ testFiles/test3 3
++ testFiles/test4/test4.txt 4
+- testFiles/test2 2
+
